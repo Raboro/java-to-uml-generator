@@ -2,9 +2,12 @@
 #include <stdlib.h>
 
 #include "file_scanning.h"
+#include "cli_parser.h"
 
-int main()
+int main(int argc, char *argv[])
 {
+    parse(argc, argv);
+
     int file_counter = count_files(".");
     printf("%d\n", file_counter);
 
