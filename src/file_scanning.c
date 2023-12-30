@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+#define SEEK_START 0
+#define READING_MODE_SINGLE_BYTE 1
+
 int count_files(char *root_path);
 
 int is_dir(struct dirent *dirent)
@@ -59,8 +62,50 @@ typedef struct uml_obj
     char *name;
 } uml_obj_t;
 
+FILE *get_file(char *file_name)
+{
+    FILE *file = fopen(file_name, "rb");
+
+    if (NULL == file)
+    {
+        perror("file reading leads to error");
+        return NULL;
+    }
+
+    return file;
+}
+
+size_t determine_size_of_file(FILE *file)
+{
+    size_t file_size;
+
+    fseek(file, SEEK_START, SEEK_END);
+    file_size = ftell(file);
+    fseek(file, SEEK_START, SEEK_SET);
+
+    return (file_size + 1); // off by one => increase by one
+}
+
+void parse_file_into_buffer(FILE *file, size_t file_size, char *buffer)
+{
+    fread(buffer, READING_MODE_SINGLE_BYTE, file_size, file);
+    fclose(file);
+}
+
 void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, char *path)
 {
+    char file_name[1024];
+    sprintf(file_name, "%s/%s", path, dirent->d_name);
+    FILE *file = get_file(file_name);
+
+    size_t file_size = determine_size_of_file(file);
+    char *buffer = (char *)malloc(file_size + 1);
+    parse_file_into_buffer(file, file_size, buffer);
+
+    buffer[file_size] = '\0';
+    printf("%s\n", dirent->d_name);
+    printf("%s\n", buffer);
+
     uml_objects[*counter].name = strdup(dirent->d_name);
     uml_objects[*counter].path = strdup(path);
     if (NULL != uml_objects[*counter].name)
