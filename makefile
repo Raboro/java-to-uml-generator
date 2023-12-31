@@ -9,3 +9,7 @@ cleanup:
 	rm main.o
 	rm file_scanning.o
 	rm cli_parser.o
+
+run_here:
+	$(MAKE) default
+	./jtuml
