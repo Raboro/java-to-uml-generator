@@ -2,11 +2,20 @@
 #define CLI_PARSER_H
 
 /**
- * @brief parse the input of the user to valid structs for the code later on
- * 
- * @param argc; parsed from main
- * @param argv; parsed from main
+ * @brief object contains cli options
  */
-void parse(int argc, char *argv[]);
+typedef struct cli_parse_obj
+{
+    char *root_path;
+} cli_parse_obj_t;
+
+/**
+ * @brief parse the input of the user to valid structs for the code later on
+ *
+ * @param cli_parse_obj cli_parse_obj_t*;
+ * @param argc int; parsed from main
+ * @param argv[] char*; parsed from main
+ */
+void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[]);
 
 #endif
