@@ -9,6 +9,11 @@ int main(int argc, char *argv[])
     cli_parse_obj_t *cli_parse_obj = (cli_parse_obj_t *)malloc(sizeof(cli_parse_obj_t));
     parse(cli_parse_obj, argc, argv);
 
+    if (cli_parse_obj->skip)
+    {
+        return 0;
+    }
+
     int file_counter = count_files(cli_parse_obj->root_path);
     printf("%d\n", file_counter);
 

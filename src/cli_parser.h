@@ -6,6 +6,7 @@
  */
 typedef struct cli_parse_obj
 {
+    short skip;
     char *root_path;
 } cli_parse_obj_t;
 
