@@ -6,6 +6,7 @@
 
 #define SEEK_START 0
 #define READING_MODE_SINGLE_BYTE 1
+#define FILENAME_MAX (260)
 
 int count_files(char *root_path);
 
@@ -19,6 +20,11 @@ int is_file(struct dirent *dirent)
     return dirent->d_type == DT_REG;
 }
 
+int is_default_exclusion(char d_name[FILENAME_MAX])
+{
+    return strcmp(d_name, ".") == 0 || strcmp(d_name, "..") == 0;
+}
+
 int count_files_(DIR *dir, char *path, int counter)
 {
     struct dirent *dir_read;
@@ -26,7 +32,7 @@ int count_files_(DIR *dir, char *path, int counter)
     {
         if (is_dir(dir_read))
         {
-            if (strcmp(dir_read->d_name, ".") != 0 && strcmp(dir_read->d_name, "..") != 0)
+            if (!is_default_exclusion(dir_read->d_name))
             {
                 char new_path[1024];
                 sprintf(new_path, "%s/%s", path, dir_read->d_name);
@@ -128,7 +134,7 @@ void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter)
     {
         if (is_dir(dir_read))
         {
-            if (strcmp(dir_read->d_name, ".") != 0 && strcmp(dir_read->d_name, "..") != 0)
+            if (!is_default_exclusion(dir_read->d_name))
             {
                 char new_path[1024];
                 sprintf(new_path, "%s/%s", root_path, dir_read->d_name);

@@ -3,6 +3,8 @@
 #ifndef FILE_SCANNING_H
 #define FILE_SCANNING_H
 
+#define FILENAME_MAX (260)
+
 /**
  * @brief type, which holds the information about an UML object, collected out of a file
  * this is needed for the parsing into UML
@@ -42,6 +44,14 @@ int is_dir(struct dirent dirent);
  * @return if file 1, else 0
  */
 int is_file(struct dirent dirent);
+
+/**
+ * @brief checks if the current filename should be excluded per default
+ *
+ * @param d_name char[FILENAME_MAX]; filename
+ * @return int; if 1 then should be excluded, else 0
+ */
+int is_default_exclusion(char d_name[FILENAME_MAX]);
 
 /**
  * @brief collects all information of all UML objects
