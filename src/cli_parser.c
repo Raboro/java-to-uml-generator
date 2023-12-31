@@ -3,7 +3,7 @@
 
 typedef struct cli_parse_obj
 {
-    short ship;
+    short skip;
     char *root_path;
 } cli_parse_obj_t;
 
@@ -26,7 +26,7 @@ void print_help()
 void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[])
 {
     int opt;
-    cli_parse_obj->ship = 0;
+    cli_parse_obj->skip = 0;
     if (1 == argc)
     {
         cli_parse_obj->root_path = ".";
@@ -39,7 +39,7 @@ void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[])
         {
         case 'h':
             print_help();
-            cli_parse_obj->ship = 1;
+            cli_parse_obj->skip = 1;
             break;
 
         case 'p':
