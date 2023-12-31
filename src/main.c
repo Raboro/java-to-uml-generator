@@ -6,9 +6,10 @@
 
 int main(int argc, char *argv[])
 {
-    parse(argc, argv);
+    cli_parse_obj_t *cli_parse_obj = (cli_parse_obj_t *)malloc(sizeof(cli_parse_obj_t));
+    parse(cli_parse_obj, argc, argv);
 
-    int file_counter = count_files(".");
+    int file_counter = count_files(cli_parse_obj->root_path);
     printf("%d\n", file_counter);
 
     uml_obj_t uml_objects[file_counter];
@@ -22,5 +23,6 @@ int main(int argc, char *argv[])
         free(uml_objects[i].path);
     }
 
+    free(cli_parse_obj);
     return 0;
 }
