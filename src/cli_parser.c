@@ -14,7 +14,10 @@ static struct option options[] = {
 
 void print_help()
 {
-    printf("Usage:\n  jtuml -h\n");
+    printf("Usage:\n");
+    printf("  jtuml           Analyze this ('.') directory\n");
+    printf("  jtuml -h        Show help\n");
+    printf("  jtuml -p [PATH] \n\n");
     printf("Options:\n");
     printf("  -h, --help     Display the help message\n");
     printf("  -p, --path     Root path to analyze\n");
