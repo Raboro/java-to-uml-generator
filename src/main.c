@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     uml_obj_t uml_objects[file_counter];
     int counter = 0;
-    collect_uml_objects(".", uml_objects, &counter);
+    collect_uml_objects(cli_parse_obj->root_path, uml_objects, &counter);
 
     for (int i = 0; i < counter; i++)
     {
