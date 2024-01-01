@@ -18,18 +18,22 @@ typedef struct uml_obj
 /**
  * @brief counts all relevant files for the UML conversions
  * @param root_path char*; root path of the whole analysis to count all relevant files
+ * @param exclusions char[FILENAME_MAX]*; exclusions by the user
+ * @param number_of_exclusion int
  * @return int; number of all files, which are relevant for the conversion into UML
  */
-int count_files(char *root_path);
+int count_files(char *root_path, char *exclusions[FILENAME_MAX], int number_of_exclusion);
 
 /**
  * @brief counts all relevant files for the UML conversions
  * @param dir DIR*; current directory
  * @param path char*; path of the current subpath to collect all files and count them in it
  * @param counter int; current counter of files
+ * @param exclusions char[FILENAME_MAX]*; exclusions by the user
+ * @param number_of_exclusion int
  * @return int; number of all files, which are relevant for the conversion into UML
  */
-int count_files_(DIR *dir, char *path, int counter);
+int count_files_(DIR *dir, char *path, int counter, char *exclusions[FILENAME_MAX], int number_of_exclusion);
 
 /**
  * @brief checks if the current object is a directory
@@ -54,12 +58,24 @@ int is_file(struct dirent dirent);
 int is_default_exclusion(char d_name[FILENAME_MAX]);
 
 /**
+ * @brief checks if the current filename is excluded per default or by the user option input
+ *
+ * @param d_name char[FILENAME_MAX]; filename
+ * @param exclusions char[FILENAME_MAX]*; exclusions by the user
+ * @param number_of_exclusion int
+ * @return int
+ */
+int is_not_excluded(char d_name[FILENAME_MAX], char *exclusions[FILENAME_MAX], int number_of_exclusion);
+
+/**
  * @brief collects all information of all UML objects
  * @param root_path char*; root path of the whole analysis to collect UML objects
  * @param uml_objects uml_obj_t*; array of UML objects to be collected in this method
  * @param counter int*; current selected file
+ * @param exclusions char[FILENAME_MAX]*; exclusions by the user
+ * @param number_of_exclusion int
  */
-void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter);
+void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter, char *exclusions[FILENAME_MAX], int number_of_exclusion);
 
 /**
  * @brief parse dirent information into UML object at counter

@@ -14,12 +14,12 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    int file_counter = count_files(cli_parse_obj->root_path);
+    int file_counter = count_files(cli_parse_obj->root_path, cli_parse_obj->exclusions, cli_parse_obj->number_of_exclusion);
     printf("%d\n", file_counter);
 
     uml_obj_t uml_objects[file_counter];
     int counter = 0;
-    collect_uml_objects(cli_parse_obj->root_path, uml_objects, &counter);
+    collect_uml_objects(cli_parse_obj->root_path, uml_objects, &counter, cli_parse_obj->exclusions, cli_parse_obj->number_of_exclusion);
 
     for (int i = 0; i < counter; i++)
     {

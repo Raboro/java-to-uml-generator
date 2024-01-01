@@ -8,7 +8,7 @@
 #define READING_MODE_SINGLE_BYTE 1
 #define FILENAME_MAX (260)
 
-int count_files(char *root_path);
+int count_files(char *root_path, char *exclusions[FILENAME_MAX], int number_of_exclusion);
 
 int is_dir(struct dirent *dirent)
 {
@@ -25,29 +25,49 @@ int is_default_exclusion(char d_name[FILENAME_MAX])
     return strcmp(d_name, ".") == 0 || strcmp(d_name, "..") == 0;
 }
 
-int count_files_(DIR *dir, char *path, int counter)
+int is_not_excluded(char d_name[FILENAME_MAX], char *exclusions[FILENAME_MAX], int number_of_exclusion)
+{
+    if (is_default_exclusion(d_name))
+    {
+        return 0;
+    }
+
+    for (int i = 0; i < number_of_exclusion; i++)
+    {
+        if (!strcmp(d_name, exclusions[i]))
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int count_files_(DIR *dir, char *path, int counter, char *exclusions[FILENAME_MAX], int number_of_exclusion)
 {
     struct dirent *dir_read;
     while (NULL != (dir_read = readdir(dir)))
     {
         if (is_dir(dir_read))
         {
-            if (!is_default_exclusion(dir_read->d_name))
+            if (is_not_excluded(dir_read->d_name, exclusions, number_of_exclusion))
             {
                 char new_path[1024];
                 sprintf(new_path, "%s/%s", path, dir_read->d_name);
-                counter += count_files(new_path);
+                counter += count_files(new_path, exclusions, number_of_exclusion);
             }
         }
         else if (is_file(dir_read))
         {
-            counter++;
+            if (is_not_excluded(dir_read->d_name, exclusions, number_of_exclusion))
+            {
+                counter++;
+            }
         }
     }
     return counter;
 }
 
-int count_files(char *root_path)
+int count_files(char *root_path, char *exclusions[FILENAME_MAX], int number_of_exclusion)
 {
     DIR *dir = opendir(root_path);
 
@@ -57,7 +77,7 @@ int count_files(char *root_path)
         return 0;
     }
 
-    int counter = count_files_(dir, root_path, 0);
+    int counter = count_files_(dir, root_path, 0, exclusions, number_of_exclusion);
     closedir(dir);
     return counter;
 }
@@ -120,7 +140,7 @@ void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, ch
     }
 }
 
-void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter)
+void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter, char *exclusions[FILENAME_MAX], int number_of_exclusion)
 {
     DIR *dir = opendir(root_path);
 
@@ -134,16 +154,19 @@ void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter)
     {
         if (is_dir(dir_read))
         {
-            if (!is_default_exclusion(dir_read->d_name))
+            if (is_not_excluded(dir_read->d_name, exclusions, number_of_exclusion))
             {
                 char new_path[1024];
                 sprintf(new_path, "%s/%s", root_path, dir_read->d_name);
-                collect_uml_objects(new_path, uml_objects, counter);
+                collect_uml_objects(new_path, uml_objects, counter, exclusions, number_of_exclusion);
             }
         }
         else if (is_file(dir_read))
         {
-            insert_file(dir_read, uml_objects, counter, root_path);
+            if (is_not_excluded(dir_read->d_name, exclusions, number_of_exclusion))
+            {
+                insert_file(dir_read, uml_objects, counter, root_path);
+            }
         }
     }
 
