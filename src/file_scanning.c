@@ -22,7 +22,7 @@ int is_file(struct dirent *dirent)
 
 int is_default_exclusion(char d_name[FILENAME_MAX])
 {
-    return strcmp(d_name, ".") == 0 || strcmp(d_name, "..") == 0;
+    return strcmp(d_name, ".") == 0 || strcmp(d_name, "..") == 0 || !strcmp(d_name, ".git");
 }
 
 int is_not_excluded(char d_name[FILENAME_MAX], char *exclusions[FILENAME_MAX], int number_of_exclusion)
