@@ -30,13 +30,28 @@ void print_help()
     printf("  -e, --exclusions     Exclusions for the analysis, file- and directory names, separated with ',' without space between\n");
 }
 
+void parse_exclusions(char *optarg, cli_parse_obj_t *cli_parse_obj)
+{
+    char *sub_exclusions;
+    unsigned int number_of_exclusions = 0;
+    const char delimiter = ',';
+
+    sub_exclusions = strtok(optarg, &delimiter);
+
+    while (sub_exclusions != NULL)
+    {
+        cli_parse_obj->exclusions[number_of_exclusions] = sub_exclusions;
+        sub_exclusions = strtok(NULL, &delimiter);
+        number_of_exclusions++;
+    }
+
+    cli_parse_obj->number_of_exclusion = number_of_exclusions;
+}
+
 void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[])
 {
     int opt;
     cli_parse_obj->skip = 0;
-    char delimiter = ',';
-    char *sub_exclusions;
-    int number_of_exclusions = 0;
 
     if (1 == argc)
     {
@@ -58,16 +73,7 @@ void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[])
             break;
 
         case 'e':
-            sub_exclusions = strtok(optarg, &delimiter);
-
-            while (sub_exclusions != NULL)
-            {
-                cli_parse_obj->exclusions[number_of_exclusions] = sub_exclusions;
-                sub_exclusions = strtok(NULL, &delimiter);
-                number_of_exclusions++;
-            }
-
-            cli_parse_obj->number_of_exclusion = number_of_exclusions;
+            parse_exclusions(optarg, cli_parse_obj);
             break;
 
         default:

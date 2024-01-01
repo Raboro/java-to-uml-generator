@@ -23,4 +23,12 @@ typedef struct cli_parse_obj
  */
 void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[]);
 
+/**
+ * @brief parse the exclusion argument
+ *
+ * @param optarg char*, exclusion argument parsed
+ * @param cli_parse_obj cli_parse_obj_t*;
+ */
+void parse_exclusions(char *optarg, cli_parse_obj_t *cli_parse_obj);
+
 #endif
