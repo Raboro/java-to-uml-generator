@@ -10,24 +10,27 @@ typedef struct cli_parse_obj
     char *root_path;
     char *exclusions[FILENAME_MAX];
     int number_of_exclusion;
+    short list_file_names;
 } cli_parse_obj_t;
 
 static struct option options[] = {
     {"help", no_argument, 0, 'h'},
     {"path", required_argument, 0, 'p'},
     {"exclusions", optional_argument, 0, 'e'},
+    {"list_file_names", no_argument, 0, 'l'},
     {0, 0, 0, 0}};
 
 void print_help()
 {
     printf("Usage:\n");
-    printf("  jtuml                Analyze this ('.') directory\n");
-    printf("  jtuml -h             Show help\n");
-    printf("  jtuml -p [PATH] -e [EXCLUSIONS]\n\n");
+    printf("  jtuml                    Analyze this ('.') directory\n");
+    printf("  jtuml -h                 Show help\n");
+    printf("  jtuml -p [PATH] -e [EXCLUSIONS] -l\n\n");
     printf("Options:\n");
-    printf("  -h, --help           Display the help message\n");
-    printf("  -p, --path           Root path to analyze\n");
-    printf("  -e, --exclusions     Exclusions for the analysis, file- and directory names, separated with ',' without space between\n");
+    printf("  -h, --help               Display the help message\n");
+    printf("  -p, --path               Root path to analyze\n");
+    printf("  -e, --exclusions         Exclusions for the analysis, file- and directory names, separated with ',' without space between\n");
+    printf("  -l, --list_file_names    List all scanned filenames\n");
 }
 
 void parse_exclusions(char *optarg, cli_parse_obj_t *cli_parse_obj)
@@ -52,6 +55,7 @@ void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[])
 {
     int opt;
     cli_parse_obj->skip = 0;
+    cli_parse_obj->list_file_names = 0;
 
     if (1 == argc)
     {
@@ -59,7 +63,7 @@ void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[])
         return;
     }
 
-    while (-1 != (opt = getopt_long(argc, argv, "hp:e:", options, NULL)))
+    while (-1 != (opt = getopt_long(argc, argv, "hp:e:l", options, NULL)))
     {
         switch (opt)
         {
@@ -74,6 +78,10 @@ void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[])
 
         case 'e':
             parse_exclusions(optarg, cli_parse_obj);
+            break;
+
+        case 'l':
+            cli_parse_obj->list_file_names = 1;
             break;
 
         default:

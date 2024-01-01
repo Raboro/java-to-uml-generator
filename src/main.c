@@ -23,7 +23,10 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < counter; i++)
     {
-        printf("File %d: %s with path: %s\n", i + 1, uml_objects[i].name, uml_objects[i].path);
+        if (cli_parse_obj->list_file_names)
+        {
+            printf("File %d: %s with path: %s\n", i + 1, uml_objects[i].name, uml_objects[i].path);
+        }
         free(uml_objects[i].name);
         free(uml_objects[i].path);
     }
