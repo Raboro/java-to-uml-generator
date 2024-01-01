@@ -16,7 +16,7 @@ typedef struct cli_parse_obj
 static struct option options[] = {
     {"help", no_argument, 0, 'h'},
     {"path", required_argument, 0, 'p'},
-    {"exclusions", optional_argument, 0, 'e'},
+    {"exclusions", required_argument, 0, 'e'},
     {"list_file_names", no_argument, 0, 'l'},
     {0, 0, 0, 0}};
 
