@@ -1,6 +1,8 @@
 #ifndef CLI_PARSER_H
 #define CLI_PARSER_H
 
+#define FILENAME_MAX (260)
+
 /**
  * @brief object contains cli options
  */
@@ -8,6 +10,8 @@ typedef struct cli_parse_obj
 {
     short skip;
     char *root_path;
+    char *exclusions[FILENAME_MAX];
+    int number_of_exclusion;
 } cli_parse_obj_t;
 
 /**
