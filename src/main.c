@@ -19,12 +19,12 @@ int main(int argc, char *argv[])
     printf("%d\n", file_counter);
 
     uml_obj_t uml_objects[file_counter];
-    int counter = 0;
-    collect_uml_objects(cli_parse_obj->root_path, uml_objects, &counter, cli_parse_obj->exclusions, cli_parse_obj->number_of_exclusion);
+    int uml_objects_len = 0;
+    collect_uml_objects(cli_parse_obj->root_path, uml_objects, &uml_objects_len, cli_parse_obj->exclusions, cli_parse_obj->number_of_exclusion);
 
-    parse_to_file(uml_objects);
+    parse_to_file(uml_objects, uml_objects_len);
 
-    for (int i = 0; i < counter; i++)
+    for (int i = 0; i < uml_objects_len; i++)
     {
         if (cli_parse_obj->list_file_names)
         {
