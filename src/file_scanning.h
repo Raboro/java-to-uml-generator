@@ -13,6 +13,8 @@ typedef struct uml_obj
 {
     char *path;
     char *name;
+    char **sub_objs;
+    int sub_objects_len;
 } uml_obj_t;
 
 /**

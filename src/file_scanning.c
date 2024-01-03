@@ -86,6 +86,8 @@ typedef struct uml_obj
 {
     char *path;
     char *name;
+    char **sub_objs;
+    int sub_objects_len;
 } uml_obj_t;
 
 FILE *get_file(char *file_name)
@@ -132,8 +134,47 @@ void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, ch
     printf("%s\n", dirent->d_name);
     printf("%s\n", buffer);
 
+    char *s = strstr(buffer, "class");
+
+    int substring_count = 0;
+    char **substrings = NULL;
+
+    while (s != NULL)
+    {
+        char *end = s;
+        char *start = s;
+        int count = 0;
+
+        while (*end != '\0' && (count < 2 || *end != '{'))
+        {
+            if (*end == ' ')
+            {
+                if (start == s)
+                {
+                    start = end + 1;
+                }
+                count++;
+            }
+            end++;
+        }
+
+        size_t length = end - start;
+        char *substring = malloc(length + 1); // +1 for null terminator
+        strncpy(substring, start, length);
+        substring[length] = '\0';
+
+        substrings = realloc(substrings, (substring_count + 1) * sizeof(char *));
+        substrings[substring_count] = substring;
+
+        substring_count++;
+        s = strstr(end, "class");
+    }
+
     uml_objects[*counter].name = strdup(dirent->d_name);
     uml_objects[*counter].path = strdup(path);
+    uml_objects[*counter].sub_objs = substrings;
+    uml_objects[*counter].sub_objects_len = substring_count;
+
     if (NULL != uml_objects[*counter].name)
     {
         (*counter)++;
