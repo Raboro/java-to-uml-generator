@@ -3,6 +3,7 @@
 
 #include "file_scanning.h"
 #include "cli_parser.h"
+#include "uml_parser.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +21,8 @@ int main(int argc, char *argv[])
     uml_obj_t uml_objects[file_counter];
     int counter = 0;
     collect_uml_objects(cli_parse_obj->root_path, uml_objects, &counter, cli_parse_obj->exclusions, cli_parse_obj->number_of_exclusion);
+
+    parse_to_file(uml_objects);
 
     for (int i = 0; i < counter; i++)
     {
