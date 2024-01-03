@@ -7,11 +7,11 @@ default:
 	$(MAKE) cleanup
 
 cleanup:
-	rm main.o
-	rm file_scanning.o
-	rm cli_parser.o
-	rm uml_parser.o
-	rm uml.md
+	rm -f main.o
+	rm -f file_scanning.o
+	rm -f cli_parser.o
+	rm -f uml_parser.o
+	rm -f uml.md
 
 run_here:
 	$(MAKE) default
