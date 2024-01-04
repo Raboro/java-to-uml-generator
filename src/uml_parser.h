@@ -19,4 +19,14 @@ void parse_to_file(uml_obj_t *uml_objects, int uml_objects_len);
  */
 char *parse_name(char *name);
 
+/**
+ * @brief checks if obj_name and sub_obj_name are equal to not allow duplicated obj
+ * Also sub_obj_name got a space at the end, to eliminate this, the comparison is based on len(sub_obj_name) - 1
+ *
+ * @param obj_name char*;
+ * @param sub_obj_name char*;
+ * @return int; 1 if equal, else 0
+ */
+int names_equal(char *obj_name, char *sub_obj_name);
+
 #endif

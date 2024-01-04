@@ -10,6 +10,16 @@ char *parse_name(char *name)
     return (NULL == without_dot) ? name : without_dot;
 }
 
+int names_equal(char *obj_name, char *sub_obj_name)
+{
+    size_t sub_obj_name_len = strlen(sub_obj_name);
+    if (sub_obj_name_len > 0)
+    {
+        --sub_obj_name_len;
+    }
+    return !strncmp(obj_name, sub_obj_name, sub_obj_name_len);
+}
+
 void parse_to_file(uml_obj_t *uml_objects, int uml_objects_len)
 {
     FILE *file = fopen("uml.md", "w");
@@ -23,6 +33,11 @@ void parse_to_file(uml_obj_t *uml_objects, int uml_objects_len)
         // inner classes
         for (int j = 0; j < uml_objects[i].sub_objects_len; j++)
         {
+            // not allow duplicates
+            if (names_equal(uml_objects[i].name, uml_objects[i].sub_objs[j]))
+            {
+                continue;
+            }
             fprintf(file, "class %s\n", parse_name(uml_objects[i].sub_objs[j]));
         }
     }
