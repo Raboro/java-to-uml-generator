@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     uml_obj_t uml_objects[file_counter];
     int uml_objects_len = 0;
-    collect_uml_objects(cli_parse_obj->root_path, uml_objects, &uml_objects_len, cli_parse_obj->exclusions, cli_parse_obj->number_of_exclusion);
+    collect_uml_objects(cli_parse_obj->root_path, uml_objects, &uml_objects_len, cli_parse_obj->exclusions, cli_parse_obj->number_of_exclusion, cli_parse_obj->list_file_content);
 
     parse_to_file(uml_objects, uml_objects_len);
 

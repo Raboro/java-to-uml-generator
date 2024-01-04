@@ -120,7 +120,7 @@ void parse_file_into_buffer(FILE *file, size_t file_size, char *buffer)
     fclose(file);
 }
 
-void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, char *path)
+void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, char *path, int list_content)
 {
     char file_name[1024];
     sprintf(file_name, "%s/%s", path, dirent->d_name);
@@ -131,8 +131,12 @@ void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, ch
     parse_file_into_buffer(file, file_size, buffer);
 
     buffer[file_size] = '\0';
-    printf("%s\n", dirent->d_name);
-    printf("%s\n", buffer);
+
+    if (list_content)
+    {
+        printf("%s:\n", dirent->d_name);
+        printf("%s\n\n", buffer);
+    }
 
     char *s = strstr(buffer, "class");
 
@@ -181,7 +185,7 @@ void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, ch
     }
 }
 
-void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter, char *exclusions[FILENAME_MAX], int number_of_exclusion)
+void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter, char *exclusions[FILENAME_MAX], int number_of_exclusion, int list_content)
 {
     DIR *dir = opendir(root_path);
 
@@ -199,14 +203,14 @@ void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter, 
             {
                 char new_path[1024];
                 sprintf(new_path, "%s/%s", root_path, dir_read->d_name);
-                collect_uml_objects(new_path, uml_objects, counter, exclusions, number_of_exclusion);
+                collect_uml_objects(new_path, uml_objects, counter, exclusions, number_of_exclusion, list_content);
             }
         }
         else if (is_file(dir_read))
         {
             if (is_not_excluded(dir_read->d_name, exclusions, number_of_exclusion))
             {
-                insert_file(dir_read, uml_objects, counter, root_path);
+                insert_file(dir_read, uml_objects, counter, root_path, list_content);
             }
         }
     }

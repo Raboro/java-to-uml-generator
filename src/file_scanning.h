@@ -76,15 +76,17 @@ int is_not_excluded(char d_name[FILENAME_MAX], char *exclusions[FILENAME_MAX], i
  * @param counter int*; current selected file
  * @param exclusions char[FILENAME_MAX]*; exclusions by the user
  * @param number_of_exclusion int
+ * @param list_content int; 1 if content of files is listed else 0
  */
-void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter, char *exclusions[FILENAME_MAX], int number_of_exclusion);
+void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter, char *exclusions[FILENAME_MAX], int number_of_exclusion, int list_content);
 
 /**
  * @brief parse dirent information into UML object at counter
  * @param dirent dirent*; information object of the current file
  * @param uml_objects uml_obj_t*; array of UML objects; at position counter will be data inserted in this method
  * @param counter int*; current selected file
+ * @param list_content int; 1 if content of files is listed else 0
  */
-void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter);
+void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, int list_content);
 
 #endif

@@ -13,6 +13,7 @@ typedef struct cli_parse_obj
     char *exclusions[FILENAME_MAX];
     int number_of_exclusion;
     short list_file_names;
+    short list_file_content;
 } cli_parse_obj_t;
 
 /**
