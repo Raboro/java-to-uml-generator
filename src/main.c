@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
     }
 
     int file_counter = count_files(cli_parse_obj->root_path, cli_parse_obj->exclusions, cli_parse_obj->number_of_exclusion);
-    printf("%d\n", file_counter);
 
     uml_obj_t uml_objects[file_counter];
     int uml_objects_len = 0;
@@ -35,5 +34,11 @@ int main(int argc, char *argv[])
     }
 
     free(cli_parse_obj);
+
+    if (cli_parse_obj->analyzed_files_counter)
+    {
+        printf("\n======Analyzed files: %d======\n", file_counter);
+    }
+
     return 0;
 }

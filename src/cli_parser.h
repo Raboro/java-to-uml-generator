@@ -14,6 +14,7 @@ typedef struct cli_parse_obj
     int number_of_exclusion;
     short list_file_names;
     short list_file_content;
+    short analyzed_files_counter;
 } cli_parse_obj_t;
 
 /**
