@@ -89,4 +89,13 @@ void collect_uml_objects(char *root_path, uml_obj_t *uml_objects, int *counter, 
  */
 void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, int list_content);
 
+/**
+ * @brief checks if str contains the keyword
+ *
+ * @param str char*;
+ * @param keyword const char*;
+ * @return int; if 1, then contains is true, else false
+ */
+int contains_keyword(char *str, const char *keyword);
+
 #endif

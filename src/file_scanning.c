@@ -8,6 +8,9 @@
 #define READING_MODE_SINGLE_BYTE 1
 #define FILENAME_MAX (260)
 
+#define MAX_KEYWORDS 4
+const char *keywords[MAX_KEYWORDS] = {"class", "record", "enum", "interface"};
+
 int count_files(char *root_path, char *exclusions[FILENAME_MAX], int number_of_exclusion);
 
 int is_dir(struct dirent *dirent)
@@ -120,6 +123,11 @@ void parse_file_into_buffer(FILE *file, size_t file_size, char *buffer)
     fclose(file);
 }
 
+int contains_keyword(char *str, const char *keyword)
+{
+    return (strstr(str, keyword) != NULL) ? 1 : 0;
+}
+
 void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, char *path, int list_content)
 {
     char file_name[1024];
@@ -138,46 +146,61 @@ void insert_file(struct dirent *dirent, uml_obj_t *uml_objects, int *counter, ch
         printf("%s\n\n", buffer);
     }
 
-    char *s = strstr(buffer, "class");
-
-    int substring_count = 0;
-    char **substrings = NULL;
-
-    while (s != NULL)
+    for (int i = 0; i < MAX_KEYWORDS; i++)
     {
-        char *end = s;
-        char *start = s;
-        int count = 0;
-
-        while (*end != '\0' && (count < 2 || *end != '{'))
+        if (!contains_keyword(buffer, keywords[i]))
         {
-            if (*end == ' ')
-            {
-                if (start == s)
-                {
-                    start = end + 1;
-                }
-                count++;
-            }
-            end++;
+            continue;
         }
 
-        size_t length = end - start;
-        char *substring = malloc(length + 1); // +1 for null terminator
-        strncpy(substring, start, length);
-        substring[length] = '\0';
+        char *s = strstr(buffer, keywords[i]);
+        int substring_count = 0;
+        char **substrings = NULL;
 
-        substrings = realloc(substrings, (substring_count + 1) * sizeof(char *));
-        substrings[substring_count] = substring;
+        while (s != NULL)
+        {
+            char *end = s;
+            char *start = s;
+            int count = 0;
 
-        substring_count++;
-        s = strstr(end, "class");
+            while (*end != '\0' && (count < 2 && (*end != '{' && *end != '(')))
+            {
+                if (*end == ' ')
+                {
+                    if (start == s)
+                    {
+                        start = end + 1;
+                    }
+                    count++;
+                }
+                end++;
+            }
+
+            size_t length = end - start;
+            char *substring = malloc(length + 1); // +1 for null terminator
+            strncpy(substring, start, length);
+            substring[length] = '\0';
+
+            substrings = realloc(substrings, (substring_count + 1) * sizeof(char *));
+            substrings[substring_count] = substring;
+
+            substring_count++;
+
+            for (int j = 0; j < MAX_KEYWORDS; j++)
+            {
+                if (!contains_keyword(buffer, keywords[j]))
+                {
+                    continue;
+                }
+                s = strstr(end, keywords[j]);
+                break;
+            }
+        }
+        uml_objects[*counter].name = strdup(dirent->d_name);
+        uml_objects[*counter].path = strdup(path);
+        uml_objects[*counter].sub_objs = substrings;
+        uml_objects[*counter].sub_objects_len = substring_count;
     }
-
-    uml_objects[*counter].name = strdup(dirent->d_name);
-    uml_objects[*counter].path = strdup(path);
-    uml_objects[*counter].sub_objs = substrings;
-    uml_objects[*counter].sub_objects_len = substring_count;
 
     if (NULL != uml_objects[*counter].name)
     {
