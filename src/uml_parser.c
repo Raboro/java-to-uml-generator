@@ -39,6 +39,7 @@ void parse_to_file(uml_obj_t *uml_objects, int uml_objects_len)
                 continue;
             }
             fprintf(file, "class %s\n", parse_name(uml_objects[i].sub_objs[j]));
+            fprintf(file, "%so-- %s\n", parse_name(uml_objects[i].sub_objs[j]), parse_name(uml_objects[i].name)); // each inner class is an Aggregation
         }
     }
 
