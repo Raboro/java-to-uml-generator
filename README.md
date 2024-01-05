@@ -7,7 +7,7 @@ Generate basic UML Class Diagramm out of Java Code with a CLI tool writen in C.
 Usage:
   jtuml                           Analyze this ('.') directory
   jtuml -h                        Show help
-  jtuml -p [PATH] -e [EXCLUSIONS] -n -c
+  jtuml -p [PATH] -e [EXCLUSIONS] -n -c -a
 
 Options:
   -h, --help                      Display the help message
